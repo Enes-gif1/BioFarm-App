@@ -1,0 +1,26 @@
+name: Build Bio Farm iOS
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Sync iOS Project
+        run: npx cap sync ios
+
+      - name: Build iOS App (Without Signing)
+        run: xcodebuild -workspace ios/App/App.xcworkspace -scheme App clean archive -archivePath build/App.xcarchive CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO
